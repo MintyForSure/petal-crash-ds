@@ -6,6 +6,6 @@
 #define PCDS_PUZZLE_H
 
 void playfieldInit(int screen);
-void playfieldDraw();
+void playfieldProcess();
 
 #endif //PCDS_PUZZLE_H

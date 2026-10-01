@@ -34,7 +34,7 @@ void gameLogic() {
         case 0: //menus
             break;
         case 1: //actively in game
-            playfieldDraw();
+            playfieldProcess();
             break;
     }
 }

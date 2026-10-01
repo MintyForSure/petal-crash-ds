@@ -9,7 +9,11 @@
 #include <nf_lib.h>
 static s8 bgX;
 static s8 bgY;
-static s8 tics;
+static int tics;
+static int buttonHeldLength;
+static bool usingButtons=false;
+int buttonsX=0;
+int buttonsY=0;
 using namespace std;
 
 void playfieldInit(const int screen) {
@@ -24,10 +28,30 @@ void playfieldInit(const int screen) {
     NF_LoadSpriteGfx("sprite/petalYellow",4,16,16);
     NF_LoadSpritePal("sprite/petalYellow",4);
 
+    NF_LoadSpriteGfx("sprite/cursor",5,16,16);
+    NF_LoadSpritePal("sprite/cursor",5);
+
+    // NF_LoadSpriteGfx("sprite/boardA1",5,64,64);
+    // NF_LoadSpritePal("sprite/boardA1",5);
+    // NF_LoadSpriteGfx("sprite/boardA2",6,64,64);
+    // NF_LoadSpritePal("sprite/boardA2",6);
+    // NF_LoadSpriteGfx("sprite/boardB1",7,64,64);
+    // NF_LoadSpritePal("sprite/boardB1",7);
+    // NF_LoadSpriteGfx("sprite/boardB2",8,64,64);
+    // NF_LoadSpritePal("sprite/boardB2",8);
+
     NF_VramSpriteGfx(screen,0,0,true);
     NF_VramSpritePal(screen,0,0);
     NF_VramSpriteGfx(screen,1,1,true);
     NF_VramSpritePal(screen,1,1);
+
+    NF_VramSpriteGfx(screen,5,5,true);
+    NF_VramSpritePal(screen,5,5);
+
+    // NF_VramSpriteGfx(screen,5,5,false);
+    // NF_VramSpritePal(screen,5,5);
+    // NF_VramSpriteGfx(screen,6,6,false);
+    // NF_VramSpritePal(screen,6,6);
 
     NF_LoadTiledBg("bg/background","background",256,256);
     NF_CreateTiledBg(0,3,"background");
@@ -35,6 +59,9 @@ void playfieldInit(const int screen) {
     NF_LoadTiledBg("bg/board","board",256,256);
     NF_CreateTiledBg(0,2,"board");
     NF_CreateTiledBg(1,2,"board");
+
+    NF_CreateSprite(1,5,5,5,-32,-32);
+    //consoleDemoInit();
 }
 
 static void backgroundScroll() {
@@ -48,9 +75,51 @@ static void backgroundScroll() {
 }
 
 void cursorDraw() {
+    u16 keys = keysHeld();
+    touchPosition touchscreen;
+    touchRead(&touchscreen);
 
+    if (tics>=29) {
+        NF_SpriteFrame(1,5,1);
+    }
+    else {
+        NF_SpriteFrame(1,5,0);
+    }
+
+    if (keys & KEY_TOUCH) {
+        const int x = touchscreen.px;
+        const int y = touchscreen.py;
+        if (x>64+8 and x<176+16 and y>40 and y<159) {
+            NF_MoveSprite(1,5,((x/8)*8-8),(y/8)*8-8); //through some sorcery i got this to work
+        }
+    }
+    else if (keysUp() & KEY_TOUCH) {
+        NF_MoveSprite(1,5,-32,-32);
+    }
+    // else if (usingButtons==true) {
+    //     if (keysDown()&KEY_DOWN) {
+    //         buttonHeldLength++;
+    //         buttonsY+=16;
+    //         if (buttonHeldLength%1==0) {
+    //
+    //
+    //             NF_MoveSprite(1,5,buttonsX,buttonsY);
+    //         }
+    //     }
+    // }
 }
 
-void playfieldDraw() {
+void playfieldProcess() {
+    if (tics==59) {
+        tics=0;
+    }
     backgroundScroll();
+    cursorDraw();
+    if (keysHeld() & KEY_A or keysHeld() & KEY_B or keysHeld() & KEY_X or keysHeld() & KEY_Y or keysHeld() & KEY_UP or
+        keysHeld() & KEY_DOWN or keysHeld() & KEY_RIGHT or keysHeld() & KEY_LEFT) {
+        usingButtons=true;
+    }
+    else if (keysHeld()&KEY_TOUCH) {
+        usingButtons=false;
+    }
 }

@@ -1,0 +1,6 @@
+/build/
+/.idea/
+*.nds
+build.ninja
+.ninja_deps
+.ninja_log

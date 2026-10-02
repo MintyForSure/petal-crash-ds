@@ -7,6 +7,8 @@
 #include <iostream>
 #include <nds.h>
 #include <nf_lib.h>
+#include <random>
+
 static s8 bgX;
 static s8 bgY;
 static int tics;
@@ -15,8 +17,20 @@ static bool usingButtons=false;
 int buttonsX=0;
 int buttonsY=0;
 using namespace std;
+static int grid[8][8]={
+    {1,2,1,0,0,0,0,0},
+    {2,1,0,0,0,0,0,0},
+    {0,2,3,0,3,0,0,0},
+    {0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0},
+};
 
 void playfieldInit(const int screen) {
+    //consoleDemoInit();
+    populateBoard(true);
     NF_LoadSpriteGfx("sprite/petalRed",0,16,16);
     NF_LoadSpritePal("sprite/petalRed",0);
     NF_LoadSpriteGfx("sprite/petalBlue",1,16,16);
@@ -44,6 +58,12 @@ void playfieldInit(const int screen) {
     NF_VramSpritePal(screen,0,0);
     NF_VramSpriteGfx(screen,1,1,true);
     NF_VramSpritePal(screen,1,1);
+    NF_VramSpriteGfx(screen,2,2,true);
+    NF_VramSpritePal(screen,2,2);
+    NF_VramSpriteGfx(screen,3,3,true);
+    NF_VramSpritePal(screen,3,3);
+    NF_VramSpriteGfx(screen,4,4,true);
+    NF_VramSpritePal(screen,4,4);
 
     NF_VramSpriteGfx(screen,5,5,true);
     NF_VramSpritePal(screen,5,5);
@@ -72,6 +92,14 @@ static void backgroundScroll() {
     }
     NF_ScrollBg(1,3,bgX,bgY);
     NF_ScrollBg(0,3,bgX+64,bgY);
+}
+
+void populateBoard(bool init) {
+    if (init==true) {
+        // for (int i=0;i<3;i++) {
+        //     grid[i][0]=1;
+        // }
+    }
 }
 
 void cursorDraw() {
@@ -121,5 +149,19 @@ void playfieldProcess() {
     }
     else if (keysHeld()&KEY_TOUCH) {
         usingButtons=false;
+    }
+
+    for (int i=0;i<8;i++) {
+        for (int j=0;j<8;j++) {
+            if (grid[i][j]==1) {
+                NF_CreateSprite(1,i+6,0,0,(j*16)+64,(i*16)+32);
+            }
+            else if (grid[i][j]==2) {
+                NF_CreateSprite(1,i+6+20,1,1,(j*16)+64,(i*16)+32);
+            }
+            else if (grid[i][j]==3) {
+                NF_CreateSprite(1,i+6+40,2,2,(j*16)+64,(i*16)+32);
+            }
+        }
     }
 }

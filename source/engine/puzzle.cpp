@@ -45,15 +45,6 @@ void playfieldInit(const int screen) {
     NF_LoadSpriteGfx("sprite/cursor",5,16,16);
     NF_LoadSpritePal("sprite/cursor",5);
 
-    // NF_LoadSpriteGfx("sprite/boardA1",5,64,64);
-    // NF_LoadSpritePal("sprite/boardA1",5);
-    // NF_LoadSpriteGfx("sprite/boardA2",6,64,64);
-    // NF_LoadSpritePal("sprite/boardA2",6);
-    // NF_LoadSpriteGfx("sprite/boardB1",7,64,64);
-    // NF_LoadSpritePal("sprite/boardB1",7);
-    // NF_LoadSpriteGfx("sprite/boardB2",8,64,64);
-    // NF_LoadSpritePal("sprite/boardB2",8);
-
     NF_VramSpriteGfx(screen,0,0,true);
     NF_VramSpritePal(screen,0,0);
     NF_VramSpriteGfx(screen,1,1,true);
@@ -67,11 +58,6 @@ void playfieldInit(const int screen) {
 
     NF_VramSpriteGfx(screen,5,5,true);
     NF_VramSpritePal(screen,5,5);
-
-    // NF_VramSpriteGfx(screen,5,5,false);
-    // NF_VramSpritePal(screen,5,5);
-    // NF_VramSpriteGfx(screen,6,6,false);
-    // NF_VramSpritePal(screen,6,6);
 
     NF_LoadTiledBg("bg/background","background",256,256);
     NF_CreateTiledBg(0,3,"background");

@@ -18,9 +18,9 @@ int buttonsX=0;
 int buttonsY=0;
 using namespace std;
 static int grid[8][8]={
-    {1,2,1,0,0,0,0,0},
-    {2,1,0,0,0,0,0,0},
-    {0,2,3,0,3,0,0,0},
+    {1,2,3,4,5,0,0,0},
+    {5,4,3,2,1,0,0,0},
+    {0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0},
@@ -30,7 +30,6 @@ static int grid[8][8]={
 
 void playfieldInit(const int screen) {
     //consoleDemoInit();
-    populateBoard(true);
     NF_LoadSpriteGfx("sprite/petalRed",0,16,16);
     NF_LoadSpritePal("sprite/petalRed",0);
     NF_LoadSpriteGfx("sprite/petalBlue",1,16,16);
@@ -67,7 +66,8 @@ void playfieldInit(const int screen) {
     NF_CreateTiledBg(1,2,"board");
 
     NF_CreateSprite(1,5,5,5,-32,-32);
-    //consoleDemoInit();
+
+    populateBoard(true);
 }
 
 static void backgroundScroll() {
@@ -82,9 +82,29 @@ static void backgroundScroll() {
 
 void populateBoard(bool init) {
     if (init==true) {
-        // for (int i=0;i<3;i++) {
-        //     grid[i][0]=1;
-        // }
+        for (int i=0;i<8;i++) {
+            for (int j=0;j<8;j++) {
+                int x = rand() % 7;
+                int y = rand() % 7;
+                grid[i][j]=x;
+                grid[i][j]=y;
+                if (grid[i][j]==1) {
+                    NF_CreateSprite(1,i+8,0,0,(j*16)+64,(i*16)+32);
+                }
+                else if (grid[i][j]==2) {
+                    NF_CreateSprite(1,i+6+20,1,1,(j*16)+64,(i*16)+32);
+                }
+                else if (grid[i][j]==3) {
+                    NF_CreateSprite(1,i+6+40,2,2,(j*16)+64,(i*16)+32);
+                }
+                else if (grid[i][j]==4) {
+                    NF_CreateSprite(1,i+6+60,3,3,(j*16)+64,(i*16)+32);
+                }
+                else if (grid[i][j]==5) {
+                    NF_CreateSprite(1,i+6+80,4,4,(j*16)+64,(i*16)+32);
+                }
+            }
+        }
     }
 }
 
@@ -135,19 +155,5 @@ void playfieldProcess() {
     }
     else if (keysHeld()&KEY_TOUCH) {
         usingButtons=false;
-    }
-
-    for (int i=0;i<8;i++) {
-        for (int j=0;j<8;j++) {
-            if (grid[i][j]==1) {
-                NF_CreateSprite(1,i+6,0,0,(j*16)+64,(i*16)+32);
-            }
-            else if (grid[i][j]==2) {
-                NF_CreateSprite(1,i+6+20,1,1,(j*16)+64,(i*16)+32);
-            }
-            else if (grid[i][j]==3) {
-                NF_CreateSprite(1,i+6+40,2,2,(j*16)+64,(i*16)+32);
-            }
-        }
     }
 }

@@ -4,12 +4,17 @@
 
 #include "game.h"
 
+#include <cstdlib>
+#include <time.h>
 #include <nf_lib.h>
 #include <nds.h>
 #include <filesystem.h>
+#include <bits/locale_classes.h>
+
 #include "puzzle.h"
 
 void gameInit() {
+    srand(time(NULL));
     gameState=1;
     NF_Set2D(0,0);
     NF_Set2D(1,0);
